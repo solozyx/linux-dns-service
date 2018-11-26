@@ -1,0 +1,16 @@
+#CentOS7 安装Bind服务
+yum install -y bind bind-chroot
+
+#查看bind是否安装成功
+rpm -qa | grep bind
+
+#查看bind安装内容
+rpm -ql bind | more
+
+#启动bind
+systemctl start named
+ps -ef | grep named
+
+#对bind默认配置文件做备份
+cp /etc/named.conf /etc/named.conf.default.20181126
+

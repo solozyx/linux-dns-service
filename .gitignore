@@ -1,0 +1,6 @@
+github.com
+*.xml
+*.iml
+*.idea
+*.bak
+*.a
