@@ -1,0 +1,23 @@
+// vim /etc/named.conf
+//
+// 每个配置项用;闭合
+
+// options全局配置
+options{
+    // 主目录
+    directory "/var/named";
+};
+
+// zone域
+// 把 imooc.com 作为二级域
+zone "imooc.com" {
+    // DNS中type有多种类型
+    // master 表示bind服务是主DNS 只有1台DNS则设置master
+    // slave 表示bind服务是从DNS
+    // hint
+    type master;
+
+    // 把imooc.com域具体解析记录配置在该file文件中
+    // imooc.com.zone 文件写到 上面配置的directory
+    file "imooc.com.zone";
+};

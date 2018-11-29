@@ -1,0 +1,32 @@
+// TTL DNS失效时间 单位秒
+$TTL 7200
+
+// 配置需要解析的二级域名 "imooc.com"
+// 在bind中写全是 "imooc.com."
+// SOA 起始记录
+// imooc.com. IN SOA imooc.com. zhaoyingxin@aliyun.com.
+
+// 字符 @ 在bind的配置文件有特殊含义 表示 imooc.com. 这个二级域名
+// 在写邮箱 @ 字符的时候用 . 代替
+// imooc.com. IN SOA imooc.com. zhaoyingxin.aliyun.com.
+
+// 222 在DNS主从序列号 用来做DNS主从同步
+// imooc.com. IN SOA imooc.com. zhaoyingxin.aliyun.com. (222)
+
+// 配置几个时间 DNS主从刷新时间 过期时间 等
+// imooc.com. IN SOA imooc.com. zhaoyingxin.aliyun.com. (222 1H 15M 1W 1D)
+
+// 告诉bind的主配置文件 imooc.com. 的起始记录 管理员邮箱
+imooc.com. IN SOA imooc.com. zhaoyingxin.aliyun.com. (222 1H 15M 1W 1D)
+
+// 配置NS记录 告诉bind解析是由哪一台服务器来解析 需要先配置NS
+// 把二级域名 imooc.com. NS 给 dns1.imooc.com.
+imooc.com. IN NS dns1.imooc.com.
+
+// 对 dns1.imooc.com. 做A记录
+// 因为解析 www.imooc.com. 的时候 先会 NS到 dns1.imooc.com. 来找对应的记录
+// 寻找权威DNS解析记录就先需要把权威DNS给IP出来 在本地
+dns1.imooc.com. IN A 10.156.11.232
+
+// 解析www域名
+www.imooc.com. IN A 2.2.2.2

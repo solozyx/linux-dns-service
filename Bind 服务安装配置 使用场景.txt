@@ -1,0 +1,50 @@
+#CentOS7 安装Bind服务
+yum install -y bind bind-chroot
+
+#查看bind是否安装成功
+rpm -qa | grep bind
+
+#查看bind安装内容
+rpm -ql bind | more
+
+#启动bind
+systemctl start named
+ps -ef | grep named
+
+#对bind默认配置文件做备份
+cp /etc/named.conf /etc/named.conf.default.20181126
+
+# A记录解析配置
+
+# vim /etc/named.conf
+------------------------------------------------------------
+options{
+    directory "/var/named";
+};
+
+zone "imooc.com" {
+    type master;
+    file "imooc.com.zone";
+};
+------------------------------------------------------------
+
+# vim /var/named/imooc.com.zone
+------------------------------------------------------------
+$TTL 7200
+imooc.com. IN SOA imooc.com. zhaoyingxin.aliyun.com. (222 1H 15M 1W 1D)
+imooc.com. IN NS dns1.imooc.com.
+dns1.imooc.com. IN A 192.168.234.139
+www.imooc.com. IN A 2.2.2.2
+------------------------------------------------------------
+
+# 清理防火墙
+firewall-cmd --zone=public --add-port=53/tcp --permanent
+systemctl stop firewalld.service
+systemctl start firewalld.service
+
+# 重启bind服务
+systemctl restart named
+
+# 查看DNS配置结果
+dig @192.168.234.139 www.imooc.com
+
